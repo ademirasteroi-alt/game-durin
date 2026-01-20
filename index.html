@@ -4,32 +4,72 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Formiga Durín</title>
+
 <style>
 body {
   margin: 0;
   background: #b30000;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   height: 100vh;
+  color: white;
+  font-family: Arial, sans-serif;
 }
+
+#info {
+  margin: 10px;
+  font-size: 16px;
+}
+
 canvas {
   background: #b30000;
-  touch-action: none;
+  border: 2px solid #fff;
 }
-#info {
-  position: fixed;
-  top: 10px;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
+
+.controls {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 60px 60px 60px;
+  grid-template-rows: 60px 60px;
+  gap: 10px;
+}
+
+.btn {
+  background: #ffffff;
+  color: #b30000;
+  font-size: 24px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+.btn:active {
+  background: #ddd;
 }
 </style>
 </head>
+
 <body>
 
-<div id="info">Pontos: <span id="score">0</span> | Fase: <span id="level">1</span></div>
+<div id="info">
+Pontos: <span id="score">0</span> |
+Fase: <span id="level">1</span>
+</div>
+
 <canvas id="game" width="360" height="360"></canvas>
+
+<div class="controls">
+  <div></div>
+  <div class="btn" onclick="move('up')">↑</div>
+  <div></div>
+
+  <div class="btn" onclick="move('left')">←</div>
+  <div class="btn" onclick="move('down')">↓</div>
+  <div class="btn" onclick="move('right')">→</div>
+</div>
 
 <script>
 const canvas = document.getElementById("game");
@@ -50,6 +90,20 @@ function spawnFood() {
     y: Math.floor(Math.random() * 20) * grid
   };
 }
+
+function move(dir) {
+  if (dir === 'up')    { ant.dx = 0; ant.dy = -grid; }
+  if (dir === 'down')  { ant.dx = 0; ant.dy = grid; }
+  if (dir === 'left')  { ant.dx = -grid; ant.dy = 0; }
+  if (dir === 'right') { ant.dx = grid; ant.dy = 0; }
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowUp") move('up');
+  if (e.key === "ArrowDown") move('down');
+  if (e.key === "ArrowLeft") move('left');
+  if (e.key === "ArrowRight") move('right');
+});
 
 function gameLoop() {
   requestAnimationFrame(gameLoop);
@@ -85,13 +139,6 @@ function gameLoop() {
   ctx.fillStyle = "#000";
   ctx.fillRect(ant.x, ant.y, grid, grid);
 }
-
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowUp") { ant.dx = 0; ant.dy = -grid; }
-  if (e.key === "ArrowDown") { ant.dx = 0; ant.dy = grid; }
-  if (e.key === "ArrowLeft") { ant.dx = -grid; ant.dy = 0; }
-  if (e.key === "ArrowRight") { ant.dx = grid; ant.dy = 0; }
-});
 
 gameLoop();
 </script>
